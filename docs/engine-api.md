@@ -1,8 +1,8 @@
 # Runtime API and Release Artifact
 
-Status: Proposal. Captures ideas on sharing one rules bundle between the app and an Elixir server. Not yet reviewed line by line, and the API names are illustrative.
+Status: Proposal, parked. Captures ideas on running one rules bundle in the app and an Elixir server. Where the runner lives is undecided (O-14 in `shiba-shared`), so this may not belong in `shiba-sdk`. API names are illustrative.
 
-Terminology: the runtime (`shiba-core`) loads a **policy**. The shipped unit is a **pack**; see `pack-format.md` for its layout, contract and signing.
+Terminology: the runner loads a **policy**. The shipped unit is a **pack**; see `pack-format.md` for its layout, contract and signing.
 
 ## Shape
 
@@ -63,4 +63,4 @@ Authors may write TypeScript or JavaScript in any layout. `sht build-policy` pro
 
 - Final function names and signatures.
 - Whether expression parsing is needed for v1.
-- Runtime-parity test harness (`SC-0010`).
+- Runtime-parity test harness (`SK-0010`).

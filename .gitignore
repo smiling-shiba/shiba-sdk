@@ -1,0 +1,18 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependencies and build output
+node_modules
+dist
+*.local
+
+# Editor and OS files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+
+# Local scratch space (not part of the project)
+dev/*

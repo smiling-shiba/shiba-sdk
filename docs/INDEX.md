@@ -1,11 +1,13 @@
-# shiba-core Docs
+# shiba-sdk Docs
 
 Status: Draft.
 
-`shiba-core` is the headless rules engine. It imports no React, Phaser, Tauri, Colyseus, database or browser APIs.
+`shiba-sdk` is the SDK for writing policies. It imports no React, Phaser, Tauri, Colyseus, database or browser APIs.
 
 | Doc | Status |
 |---|---|
+| [BACKLOG.md](BACKLOG.md): work queue | Current |
+| [sdk.md](sdk.md): writing a policy and generating its contract | Current |
 | [pack-format.md](pack-format.md): policy, templates, assets; contract, validation, build and sign | Proposal |
 | [engine-api.md](engine-api.md): the tiny deterministic engine boundary and release artifact | Proposal |
 
