@@ -8,6 +8,8 @@ Convention: `shiba-shared/docs/engineering/backlog-and-ids.md`. Keep "Now" to 3 
 
 ## Now
 
+_Nothing in progress. Waiting on the owner's decision about where the runner lives (O-14 in `shiba-shared`)._
+
 ## Next
 
 
