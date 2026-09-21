@@ -1,13 +1,15 @@
-# Engine API and Release Artifact
+# Runtime API and Release Artifact
 
-Status: Proposal. Captures ideas from the owner's ChatGPT discussion on embedding JS in Elixir. Not yet reviewed line by line, and the API names are illustrative.
+Status: Proposal. Captures ideas on sharing one rules bundle between the app and an Elixir server. Not yet reviewed line by line, and the API names are illustrative.
+
+Terminology: the runtime (`shiba-core`) loads a **policy**. The shipped unit is a **pack**; see `pack-format.md` for its layout, contract and signing.
 
 ## Shape
 
-The engine is a deterministic reducer with a tiny public surface, so the same bundle runs in the app (V8) and in `shiba-mps` (QuickBEAM):
+The runtime is a deterministic reducer with a tiny public surface, so the same bundle runs in the app (V8) and in `shiba-mps` (QuickBEAM):
 
 ```text
-STATE + COMMAND + RNG STATE -> ENGINE -> NEW STATE + EVENTS
+STATE + COMMAND + RNG STATE -> RUNTIME -> NEW STATE + EVENTS
 ```
 
 Candidate functions:
@@ -25,7 +27,7 @@ Keep data crossing the boundary plain (JSON-shaped). Avoid exposing many objects
 
 ## Determinism rules
 
-- No `Date.now()`, `Math.random()`, `fetch`, `localStorage`, `setTimeout` or filesystem in engine code.
+- No `Date.now()`, `Math.random()`, `fetch`, `localStorage`, `setTimeout` or filesystem in policy or runtime code.
 - RNG is injected: `rng.nextInt(n)`, `rng.shuffle(list)`, `rng.choose(options)`, with explicit, serializable state.
 - Consider a small in-house PRNG with published test vectors, so a dependency upgrade can never silently change shuffle results.
 - Same initial state, seed and command sequence must give the same match everywhere. This enables replays, reconnects, bug reports ("send me the replay") and engine-parity tests.
@@ -47,25 +49,18 @@ Immer was suggested for state updates. Evaluate carefully: the core should stay 
 
 ## Release artifact
 
-```text
-ruleset-2026.09.4/
-  manifest.json      # engine + ruleset versions, hashes
-  engine.js          # plain, minified, versioned, hashed JavaScript
-  schemas.json
-  cards.yml, personas.yml, decks.yml
-  assets-manifest.json
-```
+The shipped unit is a **pack** (policy bundle, templates, assets); see `pack-format.md`.
 
-- Ship **plain minified JS**, not QuickJS bytecode (bytecode is tied to an exact QuickJS ABI) and not "obfuscated" (obfuscation is not security).
+- The policy ships as **plain minified JS**, not QuickJS bytecode (bytecode is tied to an exact QuickJS ABI) and not "obfuscated" (obfuscation is not security).
 - Source maps are optional at runtime. Keep them server-side for stack traces; do not ship them publicly. Dev builds may include them.
-- A match records and pins the engine version and ruleset version.
+- A match records and pins the runtime version and the pack version.
 
 ## Authoring
 
-Authors may write TypeScript or JavaScript in any layout. The build produces one JS bundle plus generated `manifest.json` and API schema, and validates registrations and forbidden imports. Node 24 can run erasable-syntax `.ts` directly, but it does not type-check, so the artifact is JS.
+Authors may write TypeScript or JavaScript in any layout. `sht build-policy` produces one JS bundle plus a generated `contract.json`, and validates registrations and forbidden imports. Node 24 can run erasable-syntax `.ts` directly, but it does not type-check, so the shipped artifact is JS.
 
 ## Open
 
 - Final function names and signatures.
 - Whether expression parsing is needed for v1.
-- Engine-parity test harness (`SC-0010`).
+- Runtime-parity test harness (`SC-0010`).
