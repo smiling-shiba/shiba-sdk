@@ -8,7 +8,7 @@ Convention: `shiba-shared/docs/engineering/backlog-and-ids.md`. Keep "Now" to 3 
 
 ## Now
 
-_Nothing in progress. Waiting on the owner's decision about where the runner lives (O-14 in `shiba-shared`)._
+_Nothing in progress. The runner lives in `shiba-app`, not here (D-42, decided 2026-09-21), so the runtime stories below need a home before they start._
 
 ## Next
 
@@ -20,13 +20,13 @@ _Nothing in progress. Waiting on the owner's decision about where the runner liv
 - [ ] `SK-0006` [SS-02] Battle state machine: two creature rules plus Spellbook hands.
 - [ ] `SK-0008` State projection: what each client may see.
 
-## Parked: waiting on O-14 (where the runner lives)
+## Parked: the runner lives in `shiba-app` (D-42), so these need a new home before starting
 
 - [ ] `SK-0012` [SS-01] Runtime API skeleton: `createGame`, `applyCommand`, `getLegalActions`, `projectState`, `hashState`, first exercised with the toy policy. See `docs/engine-api.md`.
 - [ ] `SK-0007` [SS-01] Deterministic RNG injection and replay tests (with `SK-0013`).
 - [ ] `SK-0011` [SS-01] Constrain policy bundles to plain ES features with no Node or browser APIs, and lint for that.
 - [ ] `SK-0009` Policy and SDK version compatibility check (a pack's `sdk.range` against the runtime).
-- [ ] `SK-0010` [SS-03] Runtime-parity fixtures: the same state, commands and seed must give identical results in V8 and in the embedded JS runtime used by `shiba-mps`. Source maps are optional.
+- [ ] `SK-0010` [SS-03] Dropped by D-42: the ladder server no longer runs the public policy, so V8 and server parity is not needed.
 - [ ] `SK-0013` Canonical state hashing (RFC 8785 canonical JSON plus SHA-256) and a small in-house PRNG with published test vectors.
 
 ## Blocked

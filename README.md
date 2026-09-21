@@ -2,7 +2,7 @@
 
 The SDK for Smiling Shiba **policies** (a game's rules as code): helpers for writing a policy in a standard shape. It holds no game rules. You write a policy with this SDK (kinds, hooks and functions), and it generates the policy's **contract**, a JSON description that tooling such as `sht` (in `shiba-tools`) uses to check YAML templates against the policy without running it.
 
-Today it can define a policy and generate its contract. It does not run policies; where the code that plays them lives is an open question (O-14 in `shiba-shared`).
+Today it can define a policy and generate its contract. It does not run policies; the runner lives in `shiba-app` (D-42).
 
 Guide: [docs/sdk.md](docs/sdk.md). Format and design: [docs/pack-format.md](docs/pack-format.md).
 

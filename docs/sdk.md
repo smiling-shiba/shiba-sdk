@@ -66,7 +66,7 @@ For the toy policy: `npm run toy:contract -- 2026.09.19.1`. The expected output 
 ## Provisional and not built
 
 - **`PolicyContext`** (`ctx`) is the smallest shape that lets functions be written and tested: a `state` record and `emit(event)`. What a function may read and change will be settled with the runner.
-- **The runner** (code that plays a policy: applies commands deterministically, see [engine-api.md](engine-api.md)) is not built, and where it lives is open (O-14 in `shiba-shared`).
+- **The runner** (code that plays a policy: applies commands deterministically, see [engine-api.md](engine-api.md)) is not built. It will live in `shiba-app` (D-42).
 - **Bundling** a policy to one JS file is `sht build-policy` in `shiba-tools`. The package exposes its TypeScript source as its entry point for now, so bundlers build it into your policy.
 - **No dependencies.** The SDK has no runtime dependencies on purpose: policy bundles run in several JavaScript environments, including an embedded engine on the official server.
 

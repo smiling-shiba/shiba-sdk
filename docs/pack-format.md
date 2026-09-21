@@ -13,7 +13,7 @@ Build a **shell/framework** into which someone drops custom rules and plays a ga
 - **Assets:** art, audio and other files that templates reference.
 - **Pack:** a policy plus its templates and assets.
 
-`sht` (`shiba-tools`) builds and signs policies, validates templates against the policy's contract, and packs them. `shiba-app` loads a pack. `shiba-mps` loads the same signed policy for official play.
+`sht` (`shiba-tools`) builds and signs policies, validates templates against the policy's contract, and packs them. `shiba-app` loads a pack. The ladder server (`shiba-mps`) does not: it runs its own rules (D-42).
 
 ## 1. Who owns what
 
@@ -22,7 +22,7 @@ Build a **shell/framework** into which someone drops custom rules and plays a ga
 | `shiba-sdk` | SDK: `definePolicy(...)` and friends for writing a policy, and contract generation. Ships a toy policy as its example and test fixture. Does not run policies. |
 | `shiba-tools` (`sht`) | Build, validate, pack, sign, verify. |
 | `shiba-app` | Shell. Ships with empty `policies/`, `templates/` and `assets/`. Loads a pack. |
-| `shiba-mps` | Official server. Loads the signed policy into the BEAM. |
+| `shiba-mps` | Official server. Runs its own rules in Elixir; does not load a policy (D-42). |
 | Game data repo (later) | Policy source, templates, assets, for one game. Separate repo, own visibility. |
 
 ## 2. Pack layout

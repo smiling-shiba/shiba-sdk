@@ -1,12 +1,12 @@
 # Runtime API and Release Artifact
 
-Status: Proposal, parked. Captures ideas on running one rules bundle in the app and an Elixir server. Where the runner lives is undecided (O-14 in `shiba-shared`), so this may not belong in `shiba-sdk`. API names are illustrative.
+Status: Proposal, parked. Captures ideas on running one rules bundle in the app and an Elixir server. The runner lives in `shiba-app` (D-42), so this may not belong in `shiba-sdk`. API names are illustrative.
 
 Terminology: the runner loads a **policy**. The shipped unit is a **pack**; see `pack-format.md` for its layout, contract and signing.
 
 ## Shape
 
-The runtime is a deterministic reducer with a tiny public surface, so the same bundle runs in the app (V8) and in `shiba-mps` (QuickBEAM):
+The runtime is a deterministic reducer with a tiny public surface, so the same bundle runs in the app (V8) and in the local server. The ladder server does not use it (D-42):
 
 ```text
 STATE + COMMAND + RNG STATE -> RUNTIME -> NEW STATE + EVENTS
