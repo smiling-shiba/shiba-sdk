@@ -1,4 +1,5 @@
 // A neutral toy policy for checking that two JavaScript engines agree.
+// It leaves out localeCompare, toLocale...() and Intl: `sht build-policy` rejects them.
 // `run_probes` runs many small checks and records each result under its own
 // name, so a difference points at the exact feature. No game content.
 import { definePolicy, fn, kind, t } from '../../../src/index.ts'
@@ -49,12 +50,9 @@ const probes: Record<string, Probe> = {
   unicode_length: () => ['😀'.length, [...'😀'].length, 'é'.normalize('NFD').length, '😀'.codePointAt(0)],
   case_mapping: () => ['straße'.toUpperCase(), 'İ'.toLowerCase().length, 'ǅ'.toLowerCase()],
   regex: () => ['2026-09-21'.replace(/(\d+)-(\d+)-(\d+)/, '$3/$2/$1'), /(?<y>\d{4})/.exec('in 2026')?.groups?.y, 'aBc'.match(/b/i)?.index],
-  string_compare: () => ['a' < 'B', 'a'.localeCompare('B'), 'é'.localeCompare('f'), 'a'.localeCompare('a')],
-  number_locale: () => (1234567.891).toLocaleString('en-US'),
   // Ordering and containers
   default_sort: () => [...words].sort(),
   compare_sort: () => [...words].sort((a, b) => a.length - b.length),
-  locale_sort: () => [...words].sort((a, b) => a.localeCompare(b)),
   numeric_default_sort: () => [10, 9, 2, 1, 100].sort(),
   stable_sort: () => Array.from({ length: 12 }, (_, i) => ({ k: i % 3, i })).sort((a, b) => a.k - b.k).map((o) => `${o.k}${o.i}`),
   object_key_order: () => Object.keys({ b: 1, 2: 1, a: 1, 1: 1, [Symbol.iterator]: 1, '-1': 1 }),
@@ -82,7 +80,7 @@ const probes: Record<string, Probe> = {
   seeded_numbers: () => { const r = makeRandom(42); return Array.from({ length: 5 }, () => r()) },
   seeded_shuffle: () => shuffled([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2026),
   // Which newer features exist at all
-  features: () => ['structuredClone', 'Intl', 'WeakRef', 'FinalizationRegistry', 'Atomics', 'SharedArrayBuffer', 'queueMicrotask', 'setTimeout', 'TextEncoder', 'URL', 'console'].map((name) => `${name}:${typeof (globalThis as Record<string, unknown>)[name]}`),
+  features: () => ['structuredClone', 'WeakRef', 'FinalizationRegistry', 'Atomics', 'SharedArrayBuffer', 'queueMicrotask', 'setTimeout', 'TextEncoder', 'URL', 'console'].map((name) => `${name}:${typeof (globalThis as Record<string, unknown>)[name]}`),
   array_methods_present: () => ['toSorted', 'toReversed', 'with', 'findLast', 'at', 'flatMap'].map((name) => `${name}:${typeof (Array.prototype as unknown as Record<string, unknown>)[name]}`),
 }
 
