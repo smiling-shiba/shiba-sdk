@@ -56,9 +56,32 @@ npm run build   # sync-version, then tsc, then scripts/fix-dts-extensions.ts; wr
 
 `tsconfig.build.json` emits `dist/` for `main`/`types`/`exports`. `src/` imports use explicit `.ts` extensions (for Node's native TS support and for `sht build-policy`'s esbuild bundling); `tsc` rewrites those to `.js` in emitted JS but not in emitted `.d.ts`, so `fix-dts-extensions.ts` patches the declaration files afterward. `npm publish` runs this automatically (`prepublishOnly`).
 
-## Versioning
+## Releasing
 
-`package.json`'s `version` is the source of truth. `src/version.ts` (`SDK_VERSION`, read at runtime for the contract) is generated from it — never edit it by hand. To release: `npm version patch|minor|major`, which bumps `package.json`, regenerates and stages `src/version.ts`, and commits and tags in one step (npm's built-in `"version"` script hook). Push with `--follow-tags`, then create a GitHub Release from that tag to trigger `.github/workflows/publish.yml`. The workflow refuses to publish if the release tag and `package.json`'s version don't match.
+`package.json`'s `version` is the source of truth. `src/version.ts` (`SDK_VERSION`, read at runtime for the contract) is generated from it — never edit it by hand.
+
+Normal release, no tokens or 2FA involved:
+
+```sh
+npm version patch|minor|major   # bumps package.json, regenerates + stages src/version.ts, commits, tags
+git push --follow-tags
+```
+
+Then create a GitHub Release from that tag. `.github/workflows/publish.yml` publishes via OIDC trusted publishing and refuses to run if the release tag and `package.json`'s version don't match.
+
+Trusted publishing has to be configured once, on the package's **Settings** page at npmjs.com (already done for this package; only needed again if it's ever reset): add a GitHub Actions publisher for `smiling-shiba/shiba-sdk`, workflow filename `publish.yml`, no environment.
+
+### If a manual publish is ever needed
+
+Trusted publishing can only be configured on a package that already exists, so the very first publish of any new scope/package has to be done by hand once — this is how `0.1.0` got out. Some real gotchas hit doing that, worth knowing if it ever has to happen again:
+
+- **A brand-new npm account can only set up WebAuthn 2FA** (Touch ID, a passkey, a security key), not an authenticator app — there's no TOTP code to pass via `npm publish --otp=`.
+- **Plain `npm publish` from a WebAuthn-2FA account currently just 403s**, with no interactive prompt, rather than opening a browser challenge. This looks like a current gap in the npm CLI, not something wrong with the account.
+- **The fix:** make a granular access token (npmjs.com → Access Tokens) with **"Read and write"** access (not the "stage only" variant — that one can never publish a brand-new package, by npm's own design) and **"Bypass two-factor authentication"** checked. Use it for exactly one publish:
+  ```sh
+  npm publish --//registry.npmjs.org/:_authToken=<token>
+  ```
+  Then revoke it immediately (`npm token revoke <id>`, or from the Access Tokens page) — it's not needed again once trusted publishing is set up.
 
 ## Layout
 
