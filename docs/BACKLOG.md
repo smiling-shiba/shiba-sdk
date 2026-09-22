@@ -34,6 +34,7 @@ _Nothing in progress. The runner lives in `shiba-app`, not here (D-42, decided 2
 ## Done (recent)
 
 - [x] `SK-0001` Repo scaffold: TypeScript, Vitest, Oxlint, npm, Node 24, matching `shiba-tools`. No runtime dependencies.
+- [x] `SK-0002` Package `shiba-sdk` for npm as `@smiling-shiba/sdk` (D-44): build to `dist/` (`tsc` plus a `.d.ts` extension fix-up), `files`/`main`/`types`/`exports`, `publishConfig.access: public`. CI publish workflow (`.github/workflows/publish.yml`) triggers on a GitHub Release and uses OIDC trusted publishing, no stored npm token. First publish must be manual (trusted publishing needs the package to already exist); not done yet.
 - [x] `SK-0002` SDK: `definePolicy`, `kind`, `hook`, `fn` and the `t` field helpers, with typed function arguments and one-shot validation of the definition.
 - [x] `SK-0003` `buildContract` and `contractToJson`: deterministic `contract.json` from a policy. Checked identical to the hand-written fixture in `shiba-tools`.
 - [x] `SK-0014` `pack-format.md` reviewed and settled (decisions D-34 to D-36).

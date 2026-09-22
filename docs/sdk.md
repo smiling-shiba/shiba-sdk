@@ -1,6 +1,6 @@
 # SDK guide
 
-Status: Current for what is built. Design and format: [pack-format.md](pack-format.md). The package name is not final (see decision O-10); examples import from `shiba-sdk`.
+Status: Current for what is built. Design and format: [pack-format.md](pack-format.md). Published as `@smiling-shiba/sdk` (D-44); examples in this repo import from source directly, not the package.
 
 ## Writing a policy
 

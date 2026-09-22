@@ -1,0 +1,34 @@
+name: Publish to npm
+
+# Manual trigger: create a GitHub Release (tag it to match package.json's version,
+# e.g. v0.1.0) and this publishes @smiling-shiba/sdk at that version. Trusted
+# publishing (OIDC) must already be configured for this package on npmjs.com,
+# pointing at this repo and this workflow file — no npm token is stored here.
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # OIDC: trusted publishing
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # Trusted publishing needs npm CLI 11.5.1+; make sure the runner has it
+      # regardless of exactly which Node 24 patch setup-node picked.
+      - run: npm install -g npm@latest
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+
+      - run: npm publish

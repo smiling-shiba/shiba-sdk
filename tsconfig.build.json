@@ -1,0 +1,16 @@
+// Emits the published package. Separate from tsconfig.json (which is noEmit, for
+// typechecking everything including tests/examples/scripts) so the tarball only
+// ever contains src/, built for plain Node/bundler consumption.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "rewriteRelativeImportExtensions": true
+  },
+  "include": ["src"]
+}
