@@ -22,7 +22,9 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/fix-dts-extensions.ts",
+    "build": "node scripts/sync-version.ts && tsc -p tsconfig.build.json && node scripts/fix-dts-extensions.ts",
+    "sync-version": "node scripts/sync-version.ts",
+    "version": "npm run sync-version && git add src/version.ts",
     "prepublishOnly": "npm run build",
     "lint": "oxlint",
     "test": "vitest run",

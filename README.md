@@ -51,10 +51,14 @@ There is no formatter configured. Match the existing style and run `git diff --c
 ## Build
 
 ```sh
-npm run build   # tsc, then scripts/fix-dts-extensions.ts; writes dist/ (gitignored, published only)
+npm run build   # sync-version, then tsc, then scripts/fix-dts-extensions.ts; writes dist/ (gitignored, published only)
 ```
 
 `tsconfig.build.json` emits `dist/` for `main`/`types`/`exports`. `src/` imports use explicit `.ts` extensions (for Node's native TS support and for `sht build-policy`'s esbuild bundling); `tsc` rewrites those to `.js` in emitted JS but not in emitted `.d.ts`, so `fix-dts-extensions.ts` patches the declaration files afterward. `npm publish` runs this automatically (`prepublishOnly`).
+
+## Versioning
+
+`package.json`'s `version` is the source of truth. `src/version.ts` (`SDK_VERSION`, read at runtime for the contract) is generated from it — never edit it by hand. To release: `npm version patch|minor|major`, which bumps `package.json`, regenerates and stages `src/version.ts`, and commits and tags in one step (npm's built-in `"version"` script hook). Push with `--follow-tags`, then create a GitHub Release from that tag to trigger `.github/workflows/publish.yml`. The workflow refuses to publish if the release tag and `package.json`'s version don't match.
 
 ## Layout
 
