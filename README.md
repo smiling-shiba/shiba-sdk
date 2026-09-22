@@ -6,6 +6,18 @@ Today it can define a policy and generate its contract. It does not run policies
 
 Guide: [docs/sdk.md](docs/sdk.md). Format and design: [docs/pack-format.md](docs/pack-format.md).
 
+## Install
+
+```sh
+npm install @smiling-shiba/sdk
+```
+
+```ts
+import { definePolicy, fn, hook, kind, t } from '@smiling-shiba/sdk'
+```
+
+Published from this repo's `main` via `.github/workflows/publish.yml`, triggered by a GitHub Release. Ordinary semver (D-36); keep in step with `src/version.ts`.
+
 ## Setup
 
 Use **Node.js 24** (npm comes with it). `.nvmrc` is provided for nvm and `mise.toml` for mise; neither version manager is required.
@@ -36,11 +48,23 @@ npm run typecheck   # TypeScript, no emit (also checks the type-inference tests)
 
 There is no formatter configured. Match the existing style and run `git diff --check` for whitespace errors. All tests and lint must pass before committing.
 
+## Build
+
+```sh
+npm run build   # sync-version, then tsc, then scripts/fix-dts-extensions.ts; writes dist/ (gitignored, published only)
+```
+
+`tsconfig.build.json` emits `dist/` for `main`/`types`/`exports`. `src/` imports use explicit `.ts` extensions (for Node's native TS support and for `sht build-policy`'s esbuild bundling); `tsc` rewrites those to `.js` in emitted JS but not in emitted `.d.ts`, so `fix-dts-extensions.ts` patches the declaration files afterward. `npm publish` runs this automatically (`prepublishOnly`).
+
+## Versioning
+
+`package.json`'s `version` is the source of truth. `src/version.ts` (`SDK_VERSION`, read at runtime for the contract) is generated from it — never edit it by hand. To release: `npm version patch|minor|major`, which bumps `package.json`, regenerates and stages `src/version.ts`, and commits and tags in one step (npm's built-in `"version"` script hook). Push with `--follow-tags`, then create a GitHub Release from that tag to trigger `.github/workflows/publish.yml`. The workflow refuses to publish if the release tag and `package.json`'s version don't match.
+
 ## Layout
 
 - `src/`: the SDK (`schema.ts` field helpers, `policy.ts` definitions and validation, `contract.ts` contract generation)
 - `examples/toy-policy/`: the toy policy
-- `scripts/`: small command-line helpers
+- `scripts/`: small command-line helpers, plus `fix-dts-extensions.ts` (a build step, see below)
 - `tests/`: tests, plus `tests/fixtures/toy-contract.json`, the reviewed expected contract
 - `docs/`: documentation and the backlog
 - `AGENTS.md`: engineering rules for agents
